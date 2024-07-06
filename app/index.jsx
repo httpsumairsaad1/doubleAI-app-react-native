@@ -1,13 +1,25 @@
-import { View } from "react-native-web";
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View} from 'react-native'
+import { Link } from 'expo-router';
 
 export default function App(){
     return (
-        <View>
+        <View style={styles.container}>
             <Text>DoubleAi</Text>
             <StatusBar style="auto"/>
+            <Link href="/profile">Go to Profile</Link>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
 
 // import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 // import { useFonts } from 'expo-font';
@@ -28,7 +40,7 @@ export default function App(){
 //   });
 
 //   useEffect(() => {
-//     if (loaded) {
+////     if (loaded) {
 //       SplashScreen.hideAsync();
 //     }
 //   }, [loaded]);
