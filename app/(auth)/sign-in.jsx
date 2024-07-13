@@ -4,45 +4,42 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 
 import { images } from "../../constants";
-import { FormField } from "../../components/FormField";
-import { CustomButton } from "../../components/CustomButton";
-// import { getCurrentUser, signIn } from "../../lib/appwrite";
-// import { useGlobalContext } from "../../context/GlobalProvider";
+import FormField from "../../components/FormField";
+import CustomButton from "../../components/CustomButton";
+import { createUser, signIn } from "../../lib/appwrite";
 
 const SignIn = () => {
-//   const { setUser, setIsLogged } = useGlobalContext();
+  
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
-  const submit = () => {
+  const submit = async () => {
+    createUser();
+    if (form.email === "" || form.password === "") {
+      Alert.alert("Error", "Please fill in all fields");
+    }
 
-  }
+    setSubmitting(true);
 
-  //   setSubmitting(true);
-
-  //   try {
-  //     await signIn(form.email, form.password);
-  //     const result = await getCurrentUser();
-  //     setUser(result);
-  //     setIsLogged(true);
-
-  //     Alert.alert("Success", "User signed in successfully");
-  //     router.replace("/home");
-  //   } catch (error) {
-  //     Alert.alert("Error", error.message);
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
+    try {
+      await signIn(form.email, form.password);
+      
+      router.replace("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View
-          className="w-full flex justify-center min-h-[85vh] px-4 my-6"
+          className="w-full flex justify-center h-full px-4 my-6"
           style={{
             minHeight: Dimensions.get("window").height - 100,
           }}
@@ -50,10 +47,11 @@ const SignIn = () => {
           <Image
             source={images.daiLogo}
             resizeMode="contain"
-            className="w-[115px] h-[34px]"
+            // className="w-[390px] h-[120px]"
+            style={{ width: 390, height: 120, alignSelf: 'center' }}
           />
 
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+          <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white', marginTop: 10 }}>
             Log in to DoubleAI
           </Text>
 
@@ -71,7 +69,7 @@ const SignIn = () => {
             handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-7"
           />
-
+          
           <CustomButton
             title="Sign In"
             handlePress={submit}
@@ -79,22 +77,22 @@ const SignIn = () => {
             isLoading={isSubmitting}
           />
 
-          <View className="flex justify-center pt-5 flex-row gap-2">
+            <View className="flex justify-center pt-5 flex-row gap-2">
             <Text className="text-lg text-gray-100 font-pregular">
               Don't have an account?
             </Text>
             <Link
-              href="/s
-              ign-up"
+              href="/sign-up"
               className="text-lg font-psemibold text-secondary"
             >
               Signup
             </Link>
           </View>
-        </View>
+
+          </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  ) // end return
+} // end SignIn
 
-export default SignIn;
+export default SignIn

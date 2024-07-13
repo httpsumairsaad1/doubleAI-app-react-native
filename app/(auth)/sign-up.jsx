@@ -4,22 +4,35 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
 
 import { images } from "../../constants";
-import { FormField } from "../../components/FormField";
-import { CustomButton } from "../../components/CustomButton";
-// import { getCurrentUser, signIn } from "../../lib/appwrite";
-// import { useGlobalContext } from "../../context/GlobalProvider";
+import FormField from "../../components/FormField";
+import CustomButton from "../../components/CustomButton";
+import { createUser } from "../../lib/appwrite";
 
 const SignUp = () => {
-//   const { setUser, setIsLogged } = useGlobalContext();
-  const [isSubmitting, setSubmitting] = useState(false);
+  
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
   });
 
-  const submit = () => {
+  const [isSubmitting, setSubmitting] = useState(false);
 
+  const submit = async () => {
+    if (form.email === "" || form.password === "" || form.username === "") {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+    setSubmitting(true);
+
+    //try catch
+    try {
+      const result = await createUser(form.email, form.password, form.username);
+      router.replace('/home')
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -34,10 +47,11 @@ const SignUp = () => {
           <Image
             source={images.daiLogo}
             resizeMode="contain"
-            className="w-[115px] h-[34px]"
+            // className="w-[390px] h-[120px]"
+            style={{ width: 390, height: 120, alignSelf: 'center' }}
           />
 
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+          <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: '600', color: 'white', marginTop: 10 }}>
             Sign Up to DoubleAI
           </Text>
 
@@ -46,7 +60,6 @@ const SignUp = () => {
             value={form.username}
             handleChangeText={(e) => setForm({ ...form, username: e })}
             otherStyles="mt-10"
-            keyboardType="username"
           />
 
           <FormField
@@ -63,7 +76,7 @@ const SignUp = () => {
             handleChangeText={(e) => setForm({ ...form, password: e })}
             otherStyles="mt-7"
           />
-
+          
           <CustomButton
             title="Sign Up"
             handlePress={submit}
@@ -71,9 +84,9 @@ const SignUp = () => {
             isLoading={isSubmitting}
           />
 
-          <View className="flex justify-center pt-5 flex-row gap-2">
+            <View className="flex justify-center pt-5 flex-row gap-2">
             <Text className="text-lg text-gray-100 font-pregular">
-              Have an account already?
+              Already have an account?
             </Text>
             <Link
               href="/sign-in"
@@ -82,10 +95,11 @@ const SignUp = () => {
               Sign in
             </Link>
           </View>
-        </View>
+
+          </View>
       </ScrollView>
     </SafeAreaView>
-  );
-};
+  ) // end return
+} // end SignIn
 
-export default SignUp;
+export default SignUp
