@@ -1,14 +1,21 @@
-import { Text, View, FlatList, Image, RefreshControl } from 'react-native'
+import { Text, View, FlatList, Image, RefreshControl, Alert } from 'react-native'
 import React from 'react'
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { images } from "../../constants"; 
 import SearchInput from '../../components/SearchInput';
 import Trending from '../../components/Trending';
 import EmptyState from '../../components/EmptyState';
+import { getAllPosts } from "../../lib/appwrite"
+import useAppwrite from "../../lib/useAppwrite";
+
+Alert
 
 const Home = () => {
-  const [refreshing, setRefreshing] = useState(false);
+
+const { data: posts, refetch } = useAppwrite(getAllPosts);
+
+const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -22,7 +29,7 @@ const Home = () => {
         // data={[]}
         keyExtractor={(item) => item.$id}
           renderItem={({ item }) => (
-            <Text className="text-3xl">{item.id}</Text>
+            <Text className="text-3xl">{item.title}</Text>
           )}
         ListHeaderComponent={() => (
           <View className="flex my-6 px-4 space-y-6">
