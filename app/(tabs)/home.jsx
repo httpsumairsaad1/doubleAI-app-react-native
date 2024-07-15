@@ -7,11 +7,13 @@ import SearchInput from '../../components/SearchInput';
 import Trending from '../../components/Trending';
 import VideoCard from "../../components/VideoCard"
 import EmptyState from '../../components/EmptyState';
-import { getAllPosts } from "../../lib/appwrite"
+import { getAllPosts, getLatestPosts } from "../../lib/appwrite"
 import useAppwrite from "../../lib/useAppwrite";
 
 const Home = () => {
 const { data: posts, refetch } = useAppwrite(getAllPosts);
+const { data: latestPosts } = useAppwrite(getLatestPosts);
+
 const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = async () => {
@@ -25,11 +27,11 @@ const [refreshing, setRefreshing] = useState(false);
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
+        // data={[{id:1}, {id:2}, {id:3}]}
         data={posts}
-        // data={[]}
         keyExtractor={(item) => item.$id}
           renderItem={({ item }) => (
-            // <Text className="text-3xl text-white">{item.title}</Text>
+            // <Text className="text-3xl text-white">{item.id}</Text>
             <VideoCard video={item} />
           )}
         ListHeaderComponent={() => (
@@ -60,12 +62,10 @@ const [refreshing, setRefreshing] = useState(false);
             <SearchInput/>
 
             <View className="w-full flex-1 pt-5 pb-8">
-              <Text className="text-lg font-pregular text-gray-100 mb-3">
+            <Text className="text-lg font-pregular text-gray-100 mb-3">
                 Latest Videos
               </Text>
-
-              <Trending posts={[{id:1}, {id:2}] ?? []} />
-
+              <Trending posts={latestPosts ?? []} />
             </View>
           </View>
         )}
