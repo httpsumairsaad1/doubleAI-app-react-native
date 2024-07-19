@@ -51,7 +51,7 @@ const TrendingItem = ({ activeItem, item }) => {
             setPlay(false);
           }
         }}
-      /> 
+        /> 
       ) : (
         <TouchableOpacity
           className="relative flex justify-center items-center"
