@@ -9,10 +9,12 @@ import VideoCard from "../../components/VideoCard"
 import EmptyState from '../../components/EmptyState';
 import { getAllPosts, getLatestPosts } from "../../lib/appwrite"
 import useAppwrite from "../../lib/useAppwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const Home = () => {
 const { data: posts, refetch } = useAppwrite(getAllPosts);
 const { data: latestPosts } = useAppwrite(getLatestPosts);
+const { user, setUser, setIsLogged } = useGlobalContext();
 
 const [refreshing, setRefreshing] = useState(false);
 
@@ -32,7 +34,13 @@ const [refreshing, setRefreshing] = useState(false);
         keyExtractor={(item) => item.$id}
           renderItem={({ item }) => (
             // <Text className="text-3xl text-white">{item.id}</Text>
-            <VideoCard video={item} />
+            <VideoCard
+            title={item.title}
+            thumbnail={item.thumbnail}
+            video={item.video}
+            creator={item.creator.username}
+            avatar={item.creator.avatar}
+          />
           )}
         ListHeaderComponent={() => (
           <View className="flex my-6 px-4 space-y-6">
@@ -40,11 +48,11 @@ const [refreshing, setRefreshing] = useState(false);
               <View>
                 {/* heading */}
                 <Text className="font-pmedium text-sm text-gray-100">
-                  Welcome Back
+                  Welcome Back,
                 </Text>
                 {/* Username */}
                 <Text className="text-2xl font-psemibold text-white">
-                  Umair Saad 
+                  {user?.username} 
                 </Text>
               </View>
 
