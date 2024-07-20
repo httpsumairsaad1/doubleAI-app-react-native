@@ -35,7 +35,7 @@ const Create = () => {
     //       ? ["image/png", "image/jpg", "image/jpeg"]
     //       : ["video/mp4", "video/gif"],
     // });
-    let result = ImagePicker.launchImageLibraryAsync({
+    let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: selectType === 'image' ? ImagePicker.MediaTypeOptions.Images : ImagePicker.MediaTypeOptions.Videos,
       aspect: [4, 3],
       quality: 1,
@@ -55,13 +55,9 @@ const Create = () => {
           video: result.assets[0],
         });
       }
-    } else {
-      setTimeout(() => {
-        Alert.alert("Document picked", JSON.stringify(result, null, 2));
-      }, 100);
-    }
+    } 
   };
-
+  
   const submit = async () => {
     if (
       (form.prompt === "") |
@@ -118,9 +114,9 @@ const Create = () => {
               <Video
                 source={{ uri: form.video.uri }}
                 className="w-full h-64 rounded-2xl"
-                useNativeControls
+                // useNativeControls
                 resizeMode={ResizeMode.COVER}
-                isLooping
+                // isLooping
               />
             ) : (
               <View className="w-full h-40 px-4 bg-black-100 rounded-2xl border border-black-200 flex justify-center items-center">
